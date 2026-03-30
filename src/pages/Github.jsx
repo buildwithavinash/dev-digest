@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import RepoCard from '../components/RepoCard';
+import SkeletonCard from '../components/SkeletonCard';
+import RepoList from '../components/RepoList';
 
 const Github = () => {
     const [repos, setRepos] = useState([]);
@@ -24,23 +25,23 @@ const Github = () => {
         fetchRepo();
     }, [])
 
-    if(loading){
-        return (
-            <h1>Loading...</h1>
-        )
-    }
-
-    if(error){
-        return (
-            <h1>Error: {error}</h1>
-        )
-    }
+    
 
   return (
     <div className='pb-20'>
         <h1 className='text-center text-3xl font-medium'>Trending Repos</h1>
-
-        {!loading && !error && <RepoCard repos={repos.slice(0, 10)}/>}
+        
+        {loading && (
+            <div>
+                {Array.from({length:6}).map((_, i)=>(
+                  <SkeletonCard key={i} />  
+                ))}
+            </div>
+        )}
+        {error && (
+            <p>Error: {error}</p>
+        )}
+        {!loading && !error && <RepoList repos={repos.slice(0, 10)}/>}
     </div>
   )
 }
