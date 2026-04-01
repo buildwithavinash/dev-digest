@@ -8,6 +8,22 @@ const Github = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [language, setLanguage] = useState("All");
+    const [bookmarks, setBookmarsk] = useState([]);
+
+    // fetch bookmarks
+    useEffect(()=> {
+       const saved = localStorage.getItem("bookmarks");
+
+       if(saved){
+        setBookmarsk(JSON.parse(saved))
+       }
+    }, [])
+
+    // save bookmarks to local storage
+    useEffect(()=>{
+        localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    }, [bookmarks])
+
 
     // fetch repos
     useEffect(()=>{
@@ -30,6 +46,7 @@ const Github = () => {
 
     const filteredRepo = language === "All" ? repos : repos.filter((repo)=>repo.language === language);
 
+    
     
 
   return (
