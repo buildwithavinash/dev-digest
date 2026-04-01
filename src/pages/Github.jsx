@@ -8,14 +8,15 @@ const Github = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [language, setLanguage] = useState("All");
-    const [bookmarks, setBookmarsk] = useState([]);
+    const [bookmarks, setBookmarks] = useState([]);
+    const [lastUpdate, setLastUpdated] = useState(null);
 
     // fetch bookmarks
     useEffect(()=> {
        const saved = localStorage.getItem("bookmarks");
 
        if(saved){
-        setBookmarsk(JSON.parse(saved))
+        setBookmarks(JSON.parse(saved))
        }
     }, [])
 
@@ -42,13 +43,22 @@ const Github = () => {
         }
 
         fetchRepo();
+        setLastUpdated(Date.now())
     }, [])
 
     const filteredRepo = language === "All" ? repos : repos.filter((repo)=>repo.language === language);
 
     
-    
+    // adding/deleting bookmarks
+    const toggleBookmark = (repo) => {
+        const exists = bookmarks.find((bk)=> bk.id === repo.id);
 
+        if(exists){
+            setBookmarks((bookmarks) => bookmarks.filter((bk)=>bk.id !== repo.id))
+        }else {
+            setBookmarks((bookmarks) => [...bookmarks, repo])
+        }
+    }
   return (
     <div className='pb-20'>
         <h1 className='text-center text-3xl font-medium'>Trending Repos</h1>
@@ -73,7 +83,7 @@ const Github = () => {
         </div>
 
         {/* show repo list */}
-        {!loading && !error && <RepoList filteredRepo={filteredRepo.slice(0, 10)}/>}
+        {!loading && !error && <RepoList filteredRepo={filteredRepo.slice(0, 10)} bookmarks={bookmarks} toggleBookmark={toggleBookmark}/>}
     </div>
   )
 }

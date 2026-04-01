@@ -1,6 +1,9 @@
 import { formatNumber } from "../utils/numberFormat";
 
-const RepoCard = ({ repo }) => {
+const RepoCard = ({ repo, bookmarks, toggleBookmark }) => {
+
+  const isBookmarked = bookmarks.some((bk)=>bk.id === repo.id)
+
   return (
     <div className="relative border border-slate-300 rounded-md p-2">
       <div className="flex justify-between">
@@ -34,6 +37,13 @@ const RepoCard = ({ repo }) => {
           {" "}
           {repo.language ? repo.language : "Resource"}
         </span>
+      </div>
+
+      <div className="absolute bottom-1 right-1">
+        <button onClick={(e)=>{toggleBookmark(repo); e.stopPropagation(); }}>
+          {isBookmarked ? (<i class="ri-bookmark-fill"></i>) : (<i class="ri-bookmark-line"></i>)}
+          
+        </button>
       </div>
     </div>
   );
