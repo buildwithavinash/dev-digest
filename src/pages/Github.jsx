@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import SkeletonCard from '../components/SkeletonCard';
 import RepoList from '../components/RepoList';
+import LanguageDropdown from '../components/LanguageDropdown';
 
 const Github = () => {
     const [repos, setRepos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [language, setLanguage] = useState("All");
 
+    // fetch repos
     useEffect(()=>{
         const fetchRepo = async () =>{
             try {
@@ -25,12 +28,15 @@ const Github = () => {
         fetchRepo();
     }, [])
 
+    const filteredRepo = language === "All" ? repos : repos.filter((repo)=>repo.language === language);
+
     
 
   return (
     <div className='pb-20'>
         <h1 className='text-center text-3xl font-medium'>Trending Repos</h1>
         
+        {/* skeleton loading */}
         {loading && (
             <div>
                 {Array.from({length:6}).map((_, i)=>(
@@ -38,10 +44,19 @@ const Github = () => {
                 ))}
             </div>
         )}
+
+        {/* error */}
         {error && (
             <p>Error: {error}</p>
         )}
-        {!loading && !error && <RepoList repos={repos.slice(0, 10)}/>}
+
+        {/* filter */}
+        <div className='flex justify-end mt-4'>
+        <LanguageDropdown language={language} setLanguage={setLanguage} />
+        </div>
+
+        {/* show repo list */}
+        {!loading && !error && <RepoList filteredRepo={filteredRepo.slice(0, 10)}/>}
     </div>
   )
 }
