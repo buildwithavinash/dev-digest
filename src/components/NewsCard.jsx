@@ -1,8 +1,18 @@
 import { formatPublishedTime } from "../utils/time"
 
-const NewsCard = ({article}) => {
+const NewsCard = ({article, newsBookmark, toggleBookmarks}) => {
+    const isBookmarked = newsBookmark.some((item) => item.url === article.url);
   return (
-    <a href={article.url} target="_blank" className="block border border-slate-300 rounded-md overflow-hidden hover:shadow-xl transition-all duration-200">
+    <a href={article.url} target="_blank" className="relative block border border-slate-300 rounded-md overflow-hidden hover:shadow-xl transition-all duration-200">
+
+
+    {/* bookmark button */}
+    <div onClick={(e)=> {e.stopPropagation()}} className="absolute top-1 right-2 bg-slate-800/60 px-2 py-1 rounded-md text-slate-300 z-10 cursor-pointer">
+    <button onClick={(e)=>{toggleBookmarks(article); e.preventDefault(); e.stopPropagation()}} className="h-full w-full cursor-pointer">
+        {isBookmarked ? (<i class="ri-bookmark-fill"></i>) : (<i class="ri-bookmark-line"></i>)}
+    </button>
+    </div>
+
         {/* image */}
 
         {article.urlToImage ? (

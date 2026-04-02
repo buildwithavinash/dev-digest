@@ -10,6 +10,8 @@ const News = () => {
   const [error, setError] = useState(null);
   const [category, setCategory] = useState("All")
   const [visible, setVisible] = useState(6);
+  const [newsBookmark, setNewsBookmark] = useState([]);
+  const [view, setView] = useState("all");
 
   const categories = ["All", "AI", "Web Dev", "Startups"]
 
@@ -32,7 +34,23 @@ const News = () => {
 
   const filterArticles = category === "All" ? articles : articles.filter((article)=> article.title.toLowerCase().includes(category.toLowerCase()));
 
-  console.log(articles);
+
+  // toggle bookmarks
+
+  const toggleBookmarks = (article) => {
+  let exists = newsBookmark.find((item)=>item.url === article.url);
+
+  if(exists){
+    setNewsBookmark((prev)=>prev.filter((item) => item.url !== article.url))
+  }else {
+    setNewsBookmark([...newsBookmark, article])
+  }
+  }
+  
+
+
+
+  
   return (
     <div className="pb-20">
       <h1 className="text-center text-3xl font-medium text-slate-900">Tech News</h1>
@@ -42,7 +60,7 @@ const News = () => {
 
 <div className="flex gap-2 justify-center my-8">
     {categories.map((cat)=>(
-      <button className="border border-slate-400 bg-slate-200 px-2 py-0.5 rounded-md cursor-pointer hover:bg-slate-300 transition-all" onClick={()=> setCategory(cat)}>
+      <button key={cat} className="border border-slate-400 bg-slate-200 px-2 py-0.5 rounded-md cursor-pointer hover:bg-slate-300 transition-all" onClick={()=> setCategory(cat)}>
         {cat}
       </button>
     ))}
@@ -69,7 +87,7 @@ const News = () => {
           </div>
         )}
         {filterArticles.slice(0, visible).map((article, index) => (
-          <NewsCard key={index} article={article}/>
+          <NewsCard key={index} article={article} newsBookmark={newsBookmark} toggleBookmarks={toggleBookmarks}/>
         ))}
       </div>
 
