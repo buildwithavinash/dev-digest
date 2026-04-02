@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { fetchNews } from "../services/newApi"
 import NewsCard from "../components/NewsCard";
 import NewsSkeleton from "../components/NewsSkeleton";
+import Header from "../components/Header";
 
 
 const News = () => {
@@ -54,6 +55,8 @@ const displayNews = view === "bookmarks" ? newsBookmark : filterArticles;
 
   return (
     <div className="pb-20">
+
+      <Header loading={loading} getNews={getNews} view={view} setView={setView} />
       {/* title */}
       <h1 className="text-center text-3xl font-medium text-slate-900">Tech News</h1>
 
@@ -67,18 +70,12 @@ const displayNews = view === "bookmarks" ? newsBookmark : filterArticles;
     ))}
 </div>
 
-{/* show bookmarks and refresh button */}
-<div className="flex gap-2 text-xl justify-end pr-2">
-    <button onClick={()=>{if(!loading) getNews(); }} className="cursor-pointer"><i class="ri-refresh-line"></i></button>
-    <button onClick={()=>setView((prev) => prev === "all" ? "bookmarks" : "all")} className='cursor-pointer'>
-        {view === "bookmarks" ? (<i class="ri-arrow-go-back-line"></i>) : (<i class="ri-bookmark-3-fill"></i>)}
-    </button>
-</div>
+
 
 
 {/* skeleton loading */}
       {loading && (
-        <div className="mt-4">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           {Array.from({length:6}).map((_, i) => (
             <NewsSkeleton key={i} />
           ))}
@@ -102,9 +99,14 @@ const displayNews = view === "bookmarks" ? newsBookmark : filterArticles;
         ))}
       </div>
 
+        {!loading && !error && displayNews.length === 0 && (
+          <div className="text-center text-slate-500">
+            <p>No bookmarks yet.</p>
+          </div>
+        )}
 
       {/* load more button */}
-      {visible < filterArticles.length && (
+      {visible < filterArticles.length && displayNews.length > 0 && (
         <div className="flex justify-center mt-4">
           <button onClick={()=>setVisible((prev) => prev + 6)} className="bg-slate-200 px-4 py-2 rounded-md cursor-pointer hover:bg-slate-300 transition-all duration-200">
             Load More

@@ -3,6 +3,7 @@ import SkeletonCard from '../components/SkeletonCard';
 import RepoList from '../components/RepoList';
 import LanguageDropdown from '../components/LanguageDropdown';
 import { getTimeAgo } from '../utils/time';
+import HeaderGithub from '../components/HeaderGithub';
 
 const Github = () => {
     const [repos, setRepos] = useState([]);
@@ -79,29 +80,21 @@ const displayRepos = view === "bookmarks" ? bookmarks : filteredRepo;
 
   return (
     <div className='pb-20'>
+        <HeaderGithub view={view} setView={setView} loading={loading} fetchRepo={fetchRepo}/>
         <h1 className='text-center text-3xl font-medium'>Trending Repos</h1>
         
         {/* skeleton loading */}
         {loading && (
-            <div>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                 {Array.from({length:6}).map((_, i)=>(
                   <SkeletonCard key={i} />  
                 ))}
             </div>
         )}
 
-{/* refresh button */}
 
-<div className='flex gap-2 text-xl justify-end pr-2'>
-    <button onClick={()=>{if(!loading) fetchRepo(); }} className='cursor-pointer'><i class="ri-refresh-line"></i></button>
-    <button onClick={()=>setView((prev) => prev === "all" ? "bookmarks" : "all")} className='cursor-pointer'>
-        {view === "bookmarks" ? (<i class="ri-arrow-go-back-line"></i>) : (<i class="ri-bookmark-3-fill"></i>)}
-    </button>
-</div>
-        {/* time ago */}
-        <div className='text-xs'>
-            <span>Last Updated: {getTimeAgo(lastUpdate)}</span>
-        </div>
+
+        
 
         {/* error */}
         {error && (
@@ -109,9 +102,16 @@ const displayRepos = view === "bookmarks" ? bookmarks : filteredRepo;
         )}
 
         {/* filter */}
-        <div className='flex justify-end mt-4'>
+        {!loading && (
+            <div className='flex justify-end items-center gap-4 mt-4'>
+            {/* time ago */}
+        <div className='text-xs'>
+            <span>Last Updated: {getTimeAgo(lastUpdate)}</span>
+        </div>
         <LanguageDropdown language={language} setLanguage={setLanguage} />
         </div>
+        )}
+        
 
         {/* show repo list */}
         {!loading && !error && <RepoList repos={displayRepos.slice(0, 10)} bookmarks={bookmarks} toggleBookmark={toggleBookmark}/>}

@@ -4,12 +4,12 @@ const Sidebar = ({activeTab, setActiveTab}) => {
     <>
     
     {/* sidebar (Desktop) */}
-      <div className='hidden md:flex flex-col w-60 bg-gray-800 p-4'>
-        <button onClick={()=>setActiveTab("news")} className={`p-3 cursor-pointer rounded-lg mb-2 ${activeTab === "news" ? "bg-blue-500" : "bg-gray-700"}`}>
+      <div className='hidden md:flex  flex-col w-60 bg-gray-800 p-4'>
+        <button onClick={()=>setActiveTab("news")} className={`p-3 cursor-pointer rounded-lg mb-2 ${activeTab === "news" ? "bg-blue-500" : "bg-gray-700"} text-slate-200 font-medium`}>
           News
         </button>
 
-        <button onClick={()=>setActiveTab("github")} className={`p-3 cursor-pointer rounded-lg mb-2 ${activeTab === "github" ? "bg-blue-500" : "bg-gray-700"}`}>
+        <button onClick={()=>setActiveTab("github")} className={`p-3 cursor-pointer rounded-lg mb-2 ${activeTab === "github" ? "bg-blue-500" : "bg-gray-700"} text-slate-200 font-medium`}>
           Github
         </button>
       </div>
