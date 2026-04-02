@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import SkeletonCard from '../components/SkeletonCard';
 import RepoList from '../components/RepoList';
 import LanguageDropdown from '../components/LanguageDropdown';
+import { getTimeAgo } from '../utils/time';
 
 const Github = () => {
     const [repos, setRepos] = useState([]);
@@ -10,6 +11,9 @@ const Github = () => {
     const [language, setLanguage] = useState("All");
     const [bookmarks, setBookmarks] = useState([]);
     const [lastUpdate, setLastUpdated] = useState(null);
+     const [, forceUpdate] = useState(0);
+    const [view, setView] = useState("all");
+
 
     // fetch bookmarks
     useEffect(()=> {
@@ -26,9 +30,8 @@ const Github = () => {
     }, [bookmarks])
 
 
-    // fetch repos
-    useEffect(()=>{
-        const fetchRepo = async () =>{
+    // fetching from api
+    const fetchRepo = async () =>{
             try {
                 setLoading(true)
                 const res = await fetch("https://api.github.com/search/repositories?q=stars:>1&sort=stars");
@@ -41,7 +44,8 @@ const Github = () => {
                 setLoading(false)
             }
         }
-
+    // fetch repos
+    useEffect(()=>{
         fetchRepo();
         setLastUpdated(Date.now())
     }, [])
@@ -59,6 +63,20 @@ const Github = () => {
             setBookmarks((bookmarks) => [...bookmarks, repo])
         }
     }
+
+   
+// update timer
+useEffect(() => {
+  const interval = setInterval(() => {
+    forceUpdate((prev) => prev + 1);
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, []);
+
+
+const displayRepos = view === "bookmarks" ? bookmarks : filteredRepo;
+
   return (
     <div className='pb-20'>
         <h1 className='text-center text-3xl font-medium'>Trending Repos</h1>
@@ -72,6 +90,19 @@ const Github = () => {
             </div>
         )}
 
+{/* refresh button */}
+
+<div>
+    <button onClick={()=>{if(!loading) fetchRepo(); }}><i class="ri-refresh-line"></i></button>
+    <button onClick={()=>setView((prev) => prev === "all" ? "bookmarks" : "all")} className=''>
+        {view === "bookmarks" ? (<i class="ri-arrow-go-back-line"></i>) : (<i class="ri-bookmark-3-fill"></i>)}
+    </button>
+</div>
+        {/* time ago */}
+        <div className='text-xs'>
+            <span>Last Updated: {getTimeAgo(lastUpdate)}</span>
+        </div>
+
         {/* error */}
         {error && (
             <p>Error: {error}</p>
@@ -83,7 +114,14 @@ const Github = () => {
         </div>
 
         {/* show repo list */}
-        {!loading && !error && <RepoList filteredRepo={filteredRepo.slice(0, 10)} bookmarks={bookmarks} toggleBookmark={toggleBookmark}/>}
+        {!loading && !error && <RepoList repos={displayRepos.slice(0, 10)} bookmarks={bookmarks} toggleBookmark={toggleBookmark}/>}
+
+        {/* bookmarks error state */}
+        {!loading && !error && displayRepos.length === 0 && (
+            <p className='text-center text-slate-500 mt-10'>
+                No bookmarks yet.
+            </p>
+        )}
     </div>
   )
 }
