@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { fetchNews } from "../services/newApi"
+import NewsCard from "../components/NewsCard";
 
 
 const News = () => {
@@ -37,12 +38,9 @@ const News = () => {
         <p>{error}</p>
       )}
 
-      <div>
+      <div className="grid grid-cols-1 gap-4">
         {articles.slice(0, 10).map((article, index) => (
-          <div key={index}>
-            <h2>{article.title}</h2>
-            <p>{article.source.name}</p>
-          </div>
+          <NewsCard key={index} article={article}/>
         ))}
       </div>
     </div>
