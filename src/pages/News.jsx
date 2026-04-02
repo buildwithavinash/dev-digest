@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { fetchNews } from "../services/newApi"
 import NewsCard from "../components/NewsCard";
+import NewsSkeleton from "../components/NewsSkeleton";
 
 
 const News = () => {
@@ -31,7 +32,11 @@ const News = () => {
       <h1 className="text-center text-3xl font-medium text-slate-900">Tech News</h1>
 
       {loading && (
-        <p>Loading...</p>
+        <div>
+          {Array.from({length:6}).map((_, i) => (
+            <NewsSkeleton key={i} />
+          ))}
+        </div>
       )}
 
       {error && (
