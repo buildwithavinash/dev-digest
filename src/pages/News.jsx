@@ -27,8 +27,8 @@ const News = () => {
 
   console.log(articles);
   return (
-    <div>
-      <h1>Tech News</h1>
+    <div className="pb-20">
+      <h1 className="text-center text-3xl font-medium text-slate-900">Tech News</h1>
 
       {loading && (
         <p>Loading...</p>
@@ -38,7 +38,7 @@ const News = () => {
         <p>{error}</p>
       )}
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         {articles.slice(0, 10).map((article, index) => (
           <NewsCard key={index} article={article}/>
         ))}
