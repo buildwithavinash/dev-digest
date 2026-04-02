@@ -15,8 +15,8 @@ const News = () => {
 
   const categories = ["All", "AI", "Web Dev", "Startups"]
 
-  useEffect(()=> {
-    const getNews = async () => {
+
+  const getNews = async () => {
       try {
         setLoading(true);
         const data = await fetchNews();
@@ -28,7 +28,8 @@ const News = () => {
       }
     }
 
-    
+  useEffect(()=> {
+  
     getNews();
   }, [])
 
@@ -48,17 +49,17 @@ const News = () => {
   }
   
 
+const displayNews = view === "bookmarks" ? newsBookmark : filterArticles;
 
 
-  
   return (
     <div className="pb-20">
+      {/* title */}
       <h1 className="text-center text-3xl font-medium text-slate-900">Tech News</h1>
 
 
 {/* tabs */}
-
-<div className="flex gap-2 justify-center my-8">
+<div className="flex gap-2 justify-center mt-4 mb-3">
     {categories.map((cat)=>(
       <button key={cat} className="border border-slate-400 bg-slate-200 px-2 py-0.5 rounded-md cursor-pointer hover:bg-slate-300 transition-all" onClick={()=> setCategory(cat)}>
         {cat}
@@ -66,8 +67,16 @@ const News = () => {
     ))}
 </div>
 
+{/* show bookmarks and refresh button */}
+<div className="flex gap-2 text-xl justify-end pr-2">
+    <button onClick={()=>{if(!loading) getNews(); }} className="cursor-pointer"><i class="ri-refresh-line"></i></button>
+    <button onClick={()=>setView((prev) => prev === "all" ? "bookmarks" : "all")} className='cursor-pointer'>
+        {view === "bookmarks" ? (<i class="ri-arrow-go-back-line"></i>) : (<i class="ri-bookmark-3-fill"></i>)}
+    </button>
+</div>
 
 
+{/* skeleton loading */}
       {loading && (
         <div className="mt-4">
           {Array.from({length:6}).map((_, i) => (
@@ -76,17 +85,19 @@ const News = () => {
         </div>
       )}
 
+{/* error */}
       {error && (
         <p>{error}</p>
       )}
 
+{/* show news */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         {filterArticles.length === 0 && (
           <div className="text-center">
             <p className="text-slate-500">No articles found.</p>
           </div>
         )}
-        {filterArticles.slice(0, visible).map((article, index) => (
+        {displayNews.slice(0, visible).map((article, index) => (
           <NewsCard key={index} article={article} newsBookmark={newsBookmark} toggleBookmarks={toggleBookmarks}/>
         ))}
       </div>
@@ -95,7 +106,7 @@ const News = () => {
       {/* load more button */}
       {visible < filterArticles.length && (
         <div className="flex justify-center mt-4">
-          <button onClick={()=>setVisible((prev) => prev + 6)} className="bg-slate-200 px-4 py-2 rounded-md cursor-pointer">
+          <button onClick={()=>setVisible((prev) => prev + 6)} className="bg-slate-200 px-4 py-2 rounded-md cursor-pointer hover:bg-slate-300 transition-all duration-200">
             Load More
           </button>
         </div>

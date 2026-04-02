@@ -92,9 +92,9 @@ const displayRepos = view === "bookmarks" ? bookmarks : filteredRepo;
 
 {/* refresh button */}
 
-<div>
-    <button onClick={()=>{if(!loading) fetchRepo(); }}><i class="ri-refresh-line"></i></button>
-    <button onClick={()=>setView((prev) => prev === "all" ? "bookmarks" : "all")} className=''>
+<div className='flex gap-2 text-xl justify-end pr-2'>
+    <button onClick={()=>{if(!loading) fetchRepo(); }} className='cursor-pointer'><i class="ri-refresh-line"></i></button>
+    <button onClick={()=>setView((prev) => prev === "all" ? "bookmarks" : "all")} className='cursor-pointer'>
         {view === "bookmarks" ? (<i class="ri-arrow-go-back-line"></i>) : (<i class="ri-bookmark-3-fill"></i>)}
     </button>
 </div>
