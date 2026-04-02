@@ -99,7 +99,7 @@ const displayNews = view === "bookmarks" ? newsBookmark : filterArticles;
         ))}
       </div>
 
-        {!loading && !error && displayNews.length === 0 && (
+        {!loading && !error && view==="bookmarks" && newsBookmark.length === 0 && (
           <div className="text-center text-slate-500">
             <p>No bookmarks yet.</p>
           </div>
