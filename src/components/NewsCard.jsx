@@ -15,10 +15,10 @@ const NewsCard = ({article, newsBookmark, toggleBookmarks}) => {
 
         {/* image */}
 
-        {article.urlToImage ? (
+        {article.image ? (
             <div className="relative h-40 w-full">
 
-            <img src={article.urlToImage} alt={article.title} className="h-full w-full object-cover"/>
+            <img src={article.image} alt={article.title} className="h-full w-full object-cover"/>
             
             </div>
         ) : (

@@ -1,7 +1,7 @@
 const API_KEY = import.meta.env.VITE_NEWS_API_KEY
 
-export const fetchNews = async (category = "technology") => {
-    const res = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${API_KEY}`);
+export const fetchNews = async (topic = "technology") => {
+    const res = await fetch(`https://gnews.io/api/v4/top-headlines?topic=${topic}&lang=en&apikey=${API_KEY}`);
 
     if(!res.ok){
         throw new Error("Failed to fetch news");
